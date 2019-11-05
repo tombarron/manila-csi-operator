@@ -1,0 +1,7 @@
+apiVersion: manilacsi.operator.openshift.io/v1alpha1
+kind: Manila
+metadata:
+  name: example-manila
+spec:
+  # Add fields here
+  size: 3

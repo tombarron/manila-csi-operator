@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -10,17 +11,34 @@ import (
 // ManilaSpec defines the desired state of Manila
 // +k8s:openapi-gen=true
 type ManilaSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
-	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
+	Config       ManilaCSIConfig   `json:"config"`
+	Image        string            `json:"image",omitempty`
+	NodeSelector map[string]string `json:"nodeSelector",omitempty`
+	Tolerations  []v1.Toleration   `json:"tolerations",omitempty`
+	Topologies   []Topologies      `json:"topologies",omitempty`
 }
+
+type Topologies struct {
+	// Key-value pairs corresponding to the NodeName
+	Topology map[string]string `json:"topology,omitempty"`
+	// Node Hostname with its allowed topology
+	Nodes []v1.NodeSelectorRequirement `json:"nodes,omitempty"`
+}
+
+type ManilaCSIConfig struct {
+	EnvVars  EnvVars `json:"envVars"`
+}
+
+type EnvVars struct {
+
+}
+
 
 // ManilaStatus defines the observed state of Manila
 // +k8s:openapi-gen=true
 type ManilaStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
-	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
+	// Node Hostname with its allowed topology
+	Nodes []v1.NodeSelectorRequirement `json:"nodes,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
